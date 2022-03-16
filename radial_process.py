@@ -87,7 +87,8 @@ conditions = [
     (df['id'].str.contains('Posterior'))]
 choices = [90, 270, 0, 180]
 df['rad_loc'] = np.select(conditions, choices)
-df = df.sort_values(by='rad_loc',ascending=True)
+df['depth_val'] = pd.Series([int(x.split('-')[0]) for x in df['depth'].tolist()])
+df = df.sort_values(by=['rad_loc','depth_val'],ascending=[True,True])
 # df = df.sort_values(by = 'depth', ascending = True, key = lambda col: pd.Series([int(x.split('-')[0]) for x in col.tolist()]))
 
 df.to_csv('data.csv')

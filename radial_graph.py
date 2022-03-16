@@ -60,6 +60,7 @@ for trace in range(len(fig4["data"])):
 big_fig = sp.make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}]*2]*2) 
 
 # Get the Express fig broken down as traces and add the traces to the proper plot within in the subplot
+print(fig1_traces)
 for traces in fig1_traces:
     big_fig.append_trace(traces, row=1, col=1)
 for traces in fig2_traces:
@@ -68,5 +69,5 @@ for traces in fig3_traces:
     big_fig.append_trace(traces, row=1, col=2)
 for traces in fig4_traces:   big_fig.append_trace(traces, row=2, col=2)
 
-# print(fig1_traces[0]['showlegend'])
+big_fig.update_polars
 big_fig.show()
