@@ -1,92 +1,63 @@
+from dash import Dash, html, dcc, Input, Output
+import plotly.express as px
+import plotly.subplots as sp
+import plotly.graph_objects as go
+
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
-import plotly.express as px
-import pathlib 
 
-def chunks(l,n):
-    """ split l into n sized chunks"""
-    return [l[i:i + n] for i in range(0, len(l), n)] 
+# load in data 
+df = pd.read_csv('data.csv')
 
-# find all files and group by specimen
-files = [x for x in pathlib.Path('data').glob('**/*')] # list all in data folder
-files = chunks((sorted(files)),3) # sort by specimen and group into 3s
-
-# combine all files into one wide dataframe
-df = pd.DataFrame()
-for files_sub in files:
-    df_sub = pd.concat([pd.read_csv(f).assign(name=f.stem.rsplit('-',1)[0].split('_')[0]) for f in files_sub], axis= 1)
-    df = pd.concat([df,df_sub], axis=0)
-df = df.set_index('name')
-
-# index is 3-tuple for some reason instead of string, fix this
-indx = [i[0] for i in df.index]
-df.index = indx
-
-# add in depth for all 8 specimens 
-df.insert(0,'depth',(['0-5','5-10','10-15','15-20','20-25','25-30','30-35','35-40']*8))
-
-# reduce all specimens into just average
-df = df.groupby('depth',sort=False).mean()
-
-# concatenate into 3-tuple of all specimens
-i = 0
-df_comb = pd.DataFrame()
-for x in range(3,len(df.columns)+3, 3):
-    col_name = str(df.iloc[:,i:x].columns[0])
-    sub = df.iloc[:,i:x].apply(tuple,axis=1).rename(col_name)
-    df_comb = pd.concat([df_comb,sub.reset_index(drop=True)], axis=1)
-    i=x
-df_comb.columns = df_comb.columns.str.rstrip('Above Threshold')
-df_comb['depth'] = ['0-5','5-10','10-15','15-20','20-25','25-30','30-35','35-40']
-df_comb = df_comb.set_index('depth')
-
-# stack and explode the 3-tuple into individual columns
-df = df_comb.stack()
-df = df.reset_index()
-df = df.rename(columns={'level_1':'id', 0:'val'})
-df[['remodel','unchanged','resorb']] = pd.DataFrame(df['val'].to_list(), index=df.index)
-df = df.drop('val', axis=1)
-
-# label quadrants
-conditions = [
-    (df['id'].str.contains('Lateral')),
-    (df['id'].str.contains('Medial')),
-    (df['id'].str.contains('Anterior')),
-    (df['id'].str.contains('Posterior'))]
-choices = ['Lateral','Medial','Anterior','Posterior']
-df['quad'] = np.select(conditions, choices)
-
-# label bone types
-conditions = [
-    (df['id'].str.contains('Cortical')),
-    (df['id'].str.contains('Trabecular'))]
-choices = ['Cortical','Trabecular']
-df['bone_type'] = np.select(conditions, choices)
-
-# label load angle
-conditions = [
-    (df['id'].str.contains('45')),
-    (df['id'].str.contains('75'))   
-]
-choices = ['45','75']
-df['load'] = np.select(conditions, choices)
-
-# label implant angle
-conditions = [
-    (df['id'].str.contains('STD')),
-    (df['id'].str.contains('INF')),
-    (df['id'].str.contains('SUP'))   
-]
-choices = ['STD','INF','SUP']
-df['posi'] = np.select(conditions, choices)
-
-# df.to_csv('data.csv')
-# print(df)
-
-# build graphs
-df_graph = df[(df['posi'] == 'STD') & (df['bone_type'] == 'Cortical') & (df['load'] == '45')]
-fig = px.bar_polar(df_graph, r="resorb", theta="quad",
+# create plots, 4 are needed for each orientation
+load_dir = 45
+implant_dir = 'STD'
+# cortical remodelling
+df_graph = df[(df['posi'] == implant_dir) & (df['bone_type'] == 'Cortical') & (df['load'] == load_dir)]
+fig1 = px.bar_polar(df_graph, r="remodel", theta="quad",
                    color="depth", template="plotly_dark",
                    color_discrete_sequence= px.colors.sequential.Plasma_r)
-fig.show()
+# trabecular remodelling
+df_graph = df[(df['posi'] == implant_dir) & (df['bone_type'] == 'Trabecular') & (df['load'] == load_dir)]
+fig2 = px.bar_polar(df_graph, r="remodel", theta="quad",
+                   color="depth", template="plotly_dark",
+                   color_discrete_sequence= px.colors.sequential.Plasma_r)
+# cortical resorption
+df_graph = df[(df['posi'] == implant_dir) & (df['bone_type'] == 'Cortical') & (df['load'] == load_dir)]
+fig3 = px.bar_polar(df_graph, r="resorp", theta="quad",
+                   color="depth", template="plotly_dark",
+                   color_discrete_sequence= px.colors.sequential.Plasma_r)
+# trabecular resorption
+df_graph = df[(df['posi'] == implant_dir) & (df['bone_type'] == 'Trabecular') & (df['load'] == load_dir)]
+fig4 = px.bar_polar(df_graph, r="resorp", theta="quad",
+                   color="depth", template="plotly_dark",
+                   color_discrete_sequence= px.colors.sequential.Plasma_r)
+
+# For as many traces that exist per Express figure, get the traces from each plot and store them in an array.
+# This is essentially breaking down the Express fig into it's traces
+fig1_traces = []
+fig2_traces = []
+fig3_traces = []
+fig4_traces = []
+for trace in range(len(fig1["data"])):
+    fig1_traces.append(fig1["data"][trace])
+for trace in range(len(fig2["data"])):
+    fig2_traces.append(fig2["data"][trace])
+for trace in range(len(fig3["data"])):
+    fig3_traces.append(fig3["data"][trace])
+for trace in range(len(fig4["data"])):
+    fig4_traces.append(fig4["data"][trace])
+
+big_fig = sp.make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}]*2]*2) 
+
+# Get the Express fig broken down as traces and add the traces to the proper plot within in the subplot
+for traces in fig1_traces:
+    big_fig.append_trace(traces, row=1, col=1)
+for traces in fig2_traces:
+    big_fig.append_trace(traces, row=2, col=1)
+for traces in fig3_traces:
+    big_fig.append_trace(traces, row=1, col=2)
+for traces in fig4_traces:
+    big_fig.append_trace(traces, row=2, col=2)
+
+big_fig.show()
