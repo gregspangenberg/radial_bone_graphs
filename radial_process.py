@@ -79,6 +79,17 @@ conditions = [
 choices = ['STD','INF','SUP']
 df['posi'] = np.select(conditions, choices)
 
+# sort into order that places the quadrants in the correct locaiton
+conditions = [
+    (df['id'].str.contains('Lateral')),
+    (df['id'].str.contains('Medial')),
+    (df['id'].str.contains('Anterior')),
+    (df['id'].str.contains('Posterior'))]
+choices = [90, 270, 0, 180]
+df['rad_loc'] = np.select(conditions, choices)
+df = df.sort_values(by='rad_loc',ascending=True)
+# df = df.sort_values(by = 'depth', ascending = True, key = lambda col: pd.Series([int(x.split('-')[0]) for x in col.tolist()]))
+
 df.to_csv('data.csv')
 print(df)
 

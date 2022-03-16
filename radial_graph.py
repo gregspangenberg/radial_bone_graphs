@@ -66,8 +66,7 @@ for traces in fig2_traces:
     big_fig.append_trace(traces, row=2, col=1)
 for traces in fig3_traces:
     big_fig.append_trace(traces, row=1, col=2)
-for traces in fig4_traces:
-    big_fig.append_trace(traces, row=2, col=2)
+for traces in fig4_traces:   big_fig.append_trace(traces, row=2, col=2)
 
 # print(fig1_traces[0]['showlegend'])
 big_fig.show()
