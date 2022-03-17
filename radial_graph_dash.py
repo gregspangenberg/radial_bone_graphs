@@ -6,8 +6,8 @@ import plotly.graph_objects as go
 # load in data 
 df = pd.read_csv('data.csv')
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+# dash automatically loads in any js, or css in /assets folder
+app = Dash(__name__)
 
 app.layout = html.Div([
     # dropdown menus
