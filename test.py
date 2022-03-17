@@ -7,7 +7,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
-
+print(df)
 
 app.layout = html.Div([
     html.Div([

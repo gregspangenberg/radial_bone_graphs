@@ -57,10 +57,13 @@ for trace in range(len(fig4["data"])):
     fig4["data"][trace]['showlegend'] = False # removes extra legends
     fig4_traces.append(fig4["data"][trace])
 
-big_fig = sp.make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}]*2]*2) 
+big_fig = sp.make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}]*2]*2,
+    # subplot_titles=['Cortical Remodelling','Cortical Resorption','Trabecular Remodelling','Trabecular Resorption'],
+    column_titles=['Remodelling','Resorption'],row_titles=['Cortical','Trabecular'],
+    horizontal_spacing=0.18, vertical_spacing=0.05
+) 
 
 # Get the Express fig broken down as traces and add the traces to the proper plot within in the subplot
-print(fig1_traces)
 for traces in fig1_traces:
     big_fig.append_trace(traces, row=1, col=1)
 for traces in fig2_traces:
@@ -69,5 +72,25 @@ for traces in fig3_traces:
     big_fig.append_trace(traces, row=1, col=2)
 for traces in fig4_traces:   big_fig.append_trace(traces, row=2, col=2)
 
-big_fig.update_polars
+print(big_fig.layout)
+big_fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.02,
+        xanchor="right",
+        x=1
+    )
+)
+for i in range(4):
+    big_fig.layout.annotations[i].update(xanchor = 'center')
+    big_fig.layout.annotations[i].update(yanchor = 'middle')
+# # big_fig.layout.annotations[0].update(xanchor='auto')
+# # big_fig.layout.annotations[0].update(y = 0.99)
+# # big_fig.layout.annotations[1].update(y = 0.99)
+big_fig.layout.annotations[2].update(x = 0.5)
+big_fig.layout.annotations[3].update(x= 0.5)
+
+
+# print(fig1_traces)
 big_fig.show()
