@@ -6,6 +6,9 @@ import plotly.graph_objects as go
 # load in data 
 df = pd.read_csv('data.csv')
 
+# rename legend
+df = df.rename(columns={'depth':'Depth [mm]'})
+
 # dash automatically loads in any js, or css in /assets folder
 app = Dash(__name__)
 
@@ -44,9 +47,10 @@ app.layout = html.Div([
     Input('load', 'value'))
 def remodel_cort(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Cortical') ]
-    fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="depth",
+    fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="Depth [mm]",
+                        range_r = [0,2.25],
                         title = 'Cortical Remodelling',
-                        template="plotly_dark",
+                        template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
     return fig
 
@@ -56,9 +60,10 @@ def remodel_cort(position,load_dir):
     Input('load', 'value'))
 def resorp_cort(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Cortical') ]
-    fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="depth",
+    fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="Depth [mm]",
+                        range_r = [0,5.5],
                         title = 'Cortical Resorption',
-                        template="plotly_dark",
+                        template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
     return fig
 
@@ -68,9 +73,10 @@ def resorp_cort(position,load_dir):
     Input('load', 'value'))
 def remodel_trab(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Trabecular') ]
-    fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="depth",
+    fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="Depth [mm]",
+                        range_r = [0,5],
                         title = 'Trabecular Remodelling',
-                        template="plotly_dark",
+                        template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
     return fig
 
@@ -80,9 +86,10 @@ def remodel_trab(position,load_dir):
     Input('load', 'value'))
 def resorp_trab(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Trabecular') ]
-    fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="depth",
+    fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="Depth [mm]",
+                        range_r = [0,3.25],
                         title = 'Trabecular Resorption',
-                        template="plotly_dark",
+                        template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
     return fig
 
@@ -90,4 +97,4 @@ def resorp_trab(position,load_dir):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()#debug=True)
