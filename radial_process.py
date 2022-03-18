@@ -96,6 +96,11 @@ df.remodel *= 0.01
 df.unchanged *= 0.01
 df.resorp *= 0.01
 
+# convert to total percent, there are 8 total slices divide by 0.125
+df.remodel *= 0.125
+df.unchanged *= 0.125
+df.resorp *= 0.125
+
 df.to_csv('data.csv')
 print(df)
 
