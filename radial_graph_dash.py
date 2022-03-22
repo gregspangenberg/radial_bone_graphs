@@ -48,7 +48,7 @@ app.layout = html.Div([
 def remodel_cort(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Cortical') ]
     fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="Depth [mm]",
-                        range_r = [0, 2.25/8],
+                        range_r = [0, 2.25],
                         title = 'Cortical Remodelling',
                         template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
@@ -61,7 +61,7 @@ def remodel_cort(position,load_dir):
 def resorp_cort(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Cortical') ]
     fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="Depth [mm]",
-                        range_r = [0, 5.5/8],
+                        range_r = [0, 5.5],
                         title = 'Cortical Resorption',
                         template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
@@ -74,7 +74,7 @@ def resorp_cort(position,load_dir):
 def remodel_trab(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Trabecular') ]
     fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="Depth [mm]",
-                        range_r = [0, 5/8],
+                        range_r = [0, 5],
                         title = 'Trabecular Remodelling',
                         template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
@@ -87,7 +87,7 @@ def remodel_trab(position,load_dir):
 def resorp_trab(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Trabecular') ]
     fig = px.bar_polar(df_graph, r="resorp", theta="quad", color="Depth [mm]",
-                        range_r = [0, 3.25/8],
+                        range_r = [0, 3.25],
                         title = 'Trabecular Resorption',
                         template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)
