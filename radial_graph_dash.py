@@ -74,7 +74,7 @@ def resorp_cort(position,load_dir):
 def remodel_trab(position,load_dir):
     df_graph = df[(df['posi'] == position) & (df['load'] == int(load_dir)) & (df['bone_type'] == 'Trabecular') ]
     fig = px.bar_polar(df_graph, r="remodel", theta="quad", color="Depth [mm]",
-                        range_r = [0, 5],
+                        range_r = [0, 5.5],
                         title = 'Trabecular Remodelling',
                         template="ggplot2",
                         color_discrete_sequence= px.colors.sequential.Plasma_r)

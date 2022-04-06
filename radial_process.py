@@ -88,7 +88,8 @@ conditions = [
 choices = [90, 270, 0, 180]
 df['rad_loc'] = np.select(conditions, choices)
 df['depth_val'] = pd.Series([int(x.split('-')[0]) for x in df['depth'].tolist()])
-df = df.sort_values(by=['rad_loc','depth_val'],ascending=[True,True])
+df = df.sort_values(by=['rad_loc','depth_val'],ascending=[True,False]) # flip depth order
+# df = df.sort_values(by=['rad_loc','depth_val'],ascending=[True,True])
 # df = df.sort_values(by = 'depth', ascending = True, key = lambda col: pd.Series([int(x.split('-')[0]) for x in col.tolist()]))
 
 # transform values to factors instead of percentages
