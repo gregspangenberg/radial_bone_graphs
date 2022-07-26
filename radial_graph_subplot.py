@@ -124,9 +124,11 @@ def radial(df, implant_dir, load_dir):
 df = pd.read_csv('data.csv')
 
 for posi in ['STD','INF','SUP']:
-    for load in [45, 75]:
+    # for load in [45, 75]:
+    for load in [45]:
         fig = radial(df, implant_dir=posi, load_dir=load)
-        pio.write_image(fig, f'figs/{posi}-{load}.png', width=1.2*1000, height=1.2*1000, scale=5)
+        # pio.write_image(fig, f'figs/{posi}-{load}.png', width=1.2*1000, height=1.2*1000, scale=5)
+        fig.show()
 
 
 # big_fig.show()
